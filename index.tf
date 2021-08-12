@@ -40,6 +40,30 @@ resource "aws_subnet" "practice-subnet" {
 
 }
 
+resource "aws_internet_gateway" "practice-igw" {
+  vpc_id = aws_vpc.practice-vpc-1.id 
+
+  tags = {
+    "key" = "${var.env-prefix}-igw"
+    Name  = "${var.env-prefix}-igw"
+  }
+}
+
+resource "aws_route_table" "tf-practice-rt" {
+
+  vpc_id = aws_vpc.practice-vpc-1
+  route = [ {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.practice-igw.id
+  } ]
+
+  tags = {
+    "key" = "${var.env-prefix}-rt"
+    Name  = "${var.env-prefix}-rt"
+  }
+}
+
+
 output "vpc-id" {
   value = aws_vpc.practice-vpc-1.id
 }
@@ -48,4 +72,6 @@ output "subnet-id" {
   value = aws_subnet.practice-subnet.id
   
 }
+
+
 

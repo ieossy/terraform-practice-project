@@ -63,6 +63,11 @@ resource "aws_route_table" "tf-practice-rt" {
   }
 }
 
+resource "aws_route_table_association" "association" {
+  subnet_id = aws_subnet.practice-subnet.id
+  route_table_id = aws_route_table.tf-practice-rt.id
+}
+
 
 output "vpc-id" {
   value = aws_vpc.practice-vpc-1.id

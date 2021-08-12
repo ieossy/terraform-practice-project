@@ -48,3 +48,5 @@ output "subnet-id" {
   value = aws_subnet.practice-subnet.id
   
 }
+
+# pushing this file to github

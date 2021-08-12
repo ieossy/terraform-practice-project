@@ -1,9 +1,12 @@
 
 
-.tfvars
+*.tfvars
 
 
-.terraform*
+.terraform/*
 
 
-.tfstate
+*.tfstate
+*.tfstate.*
+
+*.vscode

@@ -49,4 +49,3 @@ output "subnet-id" {
   
 }
 
-# pushing this file to github

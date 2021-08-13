@@ -6,7 +6,10 @@ provider "aws" {
 }
 
 variable "practice_vpc_cidr_block" {
-  description = "us east 1 vpc"
+  description = "us east vpc"
+}
+variable "default_route_block" {
+  description = "cidr block for default route table"
 }
 variable "practice_subnet_cidr_block" {
   description = "us east 1a subnet"
@@ -18,7 +21,7 @@ variable "env-prefix" {
 
 }
 
-resource "aws_vpc" "practice-vpc-1" {
+resource "aws_vpc" "practice-vpc" {
   cidr_block       = var.practice_vpc_cidr_block
   instance_tenancy = "default"
 
@@ -30,7 +33,7 @@ resource "aws_vpc" "practice-vpc-1" {
 }
 
 resource "aws_subnet" "practice-subnet" {
-  vpc_id            = aws_vpc.practice-vpc-1.id
+  vpc_id            = aws_vpc.practice-vpc.id 
   cidr_block        = var.practice_subnet_cidr_block
   availability_zone = var.subnet_az
   tags = {
@@ -41,7 +44,7 @@ resource "aws_subnet" "practice-subnet" {
 }
 
 resource "aws_internet_gateway" "practice-igw" {
-  vpc_id = aws_vpc.practice-vpc-1.id
+  vpc_id = aws_vpc.practice-vpc.id
 
   tags = {
     "key" = "${var.env-prefix}-igw"
@@ -49,28 +52,40 @@ resource "aws_internet_gateway" "practice-igw" {
   }
 }
 
-resource "aws_route_table" "tf-practice-rt" {
+# resource "aws_route_table" "tf-practice-rt" {
 
-  vpc_id = aws_vpc.practice-vpc-1.id
+#   vpc_id = aws_vpc.practice-vpc.id
+#   route {
+#     cidr_block = "0.0.0.0/0"
+#     gateway_id = aws_internet_gateway.practice-igw.id
+#   }
+
+#   tags = {
+#     "key" = "${var.env-prefix}-rt"
+#     Name  = "${var.env-prefix}-rt"
+#   }
+# }
+
+# resource "aws_route_table_association" "association" {
+#   subnet_id = aws_subnet.practice-subnet.id
+#   route_table_id = aws_route_table.tf-practice-rt.id
+# }
+
+
+resource "aws_default_route_table" "practice-main-rt" {
+  default_route_table_id = aws_vpc.practice-vpc.default_route_table_id
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block = var.default_route_block
     gateway_id = aws_internet_gateway.practice-igw.id
   }
-
   tags = {
-    "key" = "${var.env-prefix}-rt"
-    Name  = "${var.env-prefix}-rt"
+   "key" = "${var.env-prefix}-main-rt"
+    Name  = "${var.env-prefix}-main-rt"
   }
 }
 
-resource "aws_route_table_association" "association" {
-  subnet_id = aws_subnet.practice-subnet.id
-  route_table_id = aws_route_table.tf-practice-rt.id
-}
-
-
 output "vpc-id" {
-  value = aws_vpc.practice-vpc-1.id
+  value = aws_vpc.practice-vpc.id
 }
 
 output "subnet-id" {

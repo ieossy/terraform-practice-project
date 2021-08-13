@@ -1,6 +1,6 @@
 
 
-*.tfvars
+index-var.tfvars
 .terraform/*
 *.tfstate
 *.tfstate.*

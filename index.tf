@@ -11,6 +11,17 @@ variable "practice_vpc_cidr_block" {
 variable "default_route_block" {
   description = "cidr block for default route table"
 }
+variable "ssh-port" {
+  description = "ingress rule for ssh port"
+}
+variable "http-port" {}
+variable "http-cidr-blocks" {
+  
+}
+variable "ssh-cidr-blocks" {
+  description = "ssh-cidr-blocks"
+  
+}
 variable "practice_subnet_cidr_block" {
   description = "us east 1a subnet"
 }
@@ -82,6 +93,37 @@ resource "aws_default_route_table" "practice-main-rt" {
    "key" = "${var.env-prefix}-main-rt"
     Name  = "${var.env-prefix}-main-rt"
   }
+}
+
+resource "aws_security_group" "practice-sg" {
+  vpc_id = aws_vpc.practice-vpc.id
+
+  ingress {
+    description = "ingress rule for ssh port"
+    from_port = var.ssh-port
+    to_port = var.ssh-port
+    protocol = "tcp"
+    cidr_blocks = var.ssh-cidr-blocks
+  }
+  ingress {
+    description = "ingress rule for http"
+    from_port = var.http-port
+    to_port = var.http-port
+    protocol = "tcp"
+    cidr_blocks = var.http-cidr-blocks
+  }
+  egress {
+    description = "egress rule for out bound traffic for the instance"
+    from_port = 0
+    to_port = 0
+    protocol = "-1" // all protocols
+    cidr_blocks = var.http-cidr-blocks
+    prefix_list_ids = [] // for access to vpc end points
+  }
+    tags = {
+      Name = "${var.env-prefix}-practice-sg"
+      "key" = "${var.env-prefix}-practice-sg"
+    }
 }
 
 output "vpc-id" {

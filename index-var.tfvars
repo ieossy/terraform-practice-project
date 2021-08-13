@@ -9,3 +9,5 @@ ssh-port                   = 22
 http-port                  = 8080
 ssh-cidr-blocks            = ["154.113.118.2/32"]
 http-cidr-blocks           = ["0.0.0.0/0"]
+instance-type              = "t2.micro"
+key-pair-name              = "ossi-n-virgina-kp"

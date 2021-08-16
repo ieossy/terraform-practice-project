@@ -68,6 +68,8 @@ resource "aws_internet_gateway" "practice-igw" {
 }
 
 // ####################################################################
+// creating a new route table
+
 # resource "aws_route_table" "tf-practice-rt" {
 
 #   vpc_id = aws_vpc.practice-vpc.id
@@ -87,7 +89,7 @@ resource "aws_internet_gateway" "practice-igw" {
 #   route_table_id = aws_route_table.tf-practice-rt.id
 # }
 
-
+// using default route table
 resource "aws_default_route_table" "practice-main-rt" {
   default_route_table_id = aws_vpc.practice-vpc.default_route_table_id
   route {
@@ -100,7 +102,7 @@ resource "aws_default_route_table" "practice-main-rt" {
   }
 }
 
-
+// using default security group
 resource "aws_default_security_group" "default-sg" {
   vpc_id = aws_vpc.practice-vpc.id
 
@@ -135,6 +137,8 @@ resource "aws_default_security_group" "default-sg" {
 
 
 // ########################################################
+// creating a new security security group
+
 # resource "aws_security_group" "practice-sg" {
 #   vpc_id = aws_vpc.practice-vpc.id
 
@@ -166,6 +170,8 @@ resource "aws_default_security_group" "default-sg" {
 #     }
 # }
 
+# ######################################################################################################
+
 # fetching aws ami information
 
 data "aws_ami" "ec2-image" {
@@ -181,6 +187,7 @@ data "aws_ami" "ec2-image" {
   }
 }
 
+// creating aws ec2 instance
 resource "aws_instance" "practice-ec2-ami" {
   ami                         = data.aws_ami.ec2-image.id
   instance_type               = var.instance-type

@@ -197,6 +197,9 @@ resource "aws_instance" "practice-ec2-ami" {
   associate_public_ip_address = true
   key_name                    = var.key-pair-name
 
+
+  user_data = file("startup-script.sh")
+
   tags = {
     "key" = "${var.env-prefix}-server"
     Name  = "${var.env-prefix}-server"
